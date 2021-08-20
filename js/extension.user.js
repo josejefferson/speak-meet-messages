@@ -1,15 +1,22 @@
 // ==UserScript==
-// @name         Falar mensagens do Google Meet
+// @name         Escutar mensagens do Google Meet
 // @version      0.1
-// @description  Falar mensagens do Google Meet
+// @description  Extensão que adiciona um recurso de falar em voz alta as novas mensagens no Google Meet
 // @author       Jefferson Dantas
+// @homepage     https://josejefferson.github.io/speak-meet-messages/
+// @supportURL   https://github.com/josejefferson/speak-meet-messages/issues
 // @match        https://meet.google.com/*
 // @icon         https://www.google.com/s2/favicons?domain=meet.google.com
 // @grant        none
-// @require      https://josejefferson.github.io/speak-meet-messages/js/index.js
+// @require      https://josejefferson.github.io/speak-meet-messages/js/extension.js
 // ==/UserScript==
 
-
+// ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+// ┃          CONFIGURAÇÕES          ┃
+// ┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
+// ┃ "true" significa "Sim"          ┃
+// ┃ "false" significa "Não"         ┃
+// ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
 // Diz alguma expressão antes de cada mensagem, por exemplo: "Nova mensagem!"
 const Texto_para_falar_antes_da_mensagem = ""
@@ -24,7 +31,7 @@ const Falar_nome_completo = false
 const Falar_nome_depois_da_mensagem = true
 
 // Se false, fala a mensagem apenas quando a tela do Meet não está visível
-const Falar_com_a_tela_do_Meet_aberta = false
+const Falar_com_a_tela_do_Meet_aberta = true
 
 // Se true, quando uma nova mensagem chegar, a fala da anterior será interrompida
 const Interromper_mensagem_anterior = false
