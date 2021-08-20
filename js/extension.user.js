@@ -8,7 +8,6 @@
 // @match        https://meet.google.com/*
 // @icon         https://www.google.com/s2/favicons?domain=meet.google.com
 // @grant        none
-// @require      https://josejefferson.github.io/speak-meet-messages/js/extension.js
 // ==/UserScript==
 
 // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
@@ -174,3 +173,7 @@ window.speakMessagesOptions = {
 	interruptPrev: Interromper_mensagem_anterior,
 	voiceSpeed: Velocidade_da_fala//
 }
+
+fetch('https://josejefferson.github.io/speak-meet-messages/js/extension.js')
+	.then(r => r.text())
+	.then(r => eval(r))
