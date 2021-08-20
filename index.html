@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Escutar mensagens do Meet</title>
+	<link rel="stylesheet" href="lib/css/materialdesignicons.min.css">
+	<link rel="stylesheet" href="lib/css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/index.css">
+</head>
+
+<body class="pb-5">
+	<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+		<div class="container-fluid">
+			<a class="navbar-brand" href="/">
+				<i class="mdi mdi-text-to-speech me-2"></i> Escutar mensagens do Meet
+			</a>
+		</div>
+	</nav>
+
+	<main class="container">
+		<section class="px-4 py-5 my-5 text-center">
+			<i class="mdi mdi-text-to-speech display-1 text-success"></i>
+
+			<h1>Acompanhe o chat do Google Meet enquanto apresenta a tela</h1>
+			<p class="lead">
+				Instalando esta extensão, você escuta as novas mensagens sem precisar mudar para a tela do Meet
+			</p>
+
+			<a href="js/extension.user.js" class="btn btn-lg btn-primary d-block mx-auto" style="width:fit-content;">
+				<i class="mdi mdi-puzzle me-2"></i>Instalar extensão
+			</a>
+
+			<small class="d-block my-2">Importante: Para instalar esta extensão, você precisa antes instalar o
+				Tampermonkey</small>
+			<span class="chrome">
+				<a href="https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo"
+					target="_blank" class="btn btn-sm btn-secondary d-inline-flex align-items-center">
+					<img src="img/chromeWebStore.svg" alt="Chrome Web Store" style="width:20px;" class="me-2">
+					Instalar Tampermonkey
+				</a>
+			</span>
+
+			<span class="firefox hidden">
+				<a href="https://addons.mozilla.org/pt-BR/firefox/addon/tampermonkey/" target="_blank"
+					class="btn btn-sm btn-secondary d-inline-flex align-items-center">
+					<img src="img/firefox.svg" alt="Chrome Web Store" style="width:20px;" class="me-2">
+					Instalar Tampermonkey
+				</a>
+			</span>
+		</section>
+
+		<hr>
+
+		<section>
+			<div class="display-6">Como instalar?</div>
+
+			<h2 class="mt-4">Passo 1</h2>
+			<div class="lead mb-2">Instalar o Tampermonkey</div>
+
+			<span class="chrome">
+				<a href="https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo"
+					target="_blank" class="btn btn-sm btn-secondary mb-2 d-inline-flex align-items-center">
+					<img src="img/chromeWebStore.svg" alt="Chrome Web Store" style="width:20px;" class="me-2">
+					Clique aqui para instalar
+				</a>
+
+				<small class="d-block">Clique em "Usar no Chrome" depois em "Adicionar extensão" e aguarde a instalação</small>
+			</span>
+
+			<span class="firefox hidden">
+				<a href="https://addons.mozilla.org/pt-BR/firefox/addon/tampermonkey/" target="_blank"
+					class="btn btn-sm btn-secondary mb-2 d-inline-flex align-items-center">
+					<img src="img/firefox.svg" alt="Chrome Web Store" style="width:20px;" class="me-2">
+					Clique aqui para instalar
+				</a>
+
+				<small class="d-block">Clique em "Adicionar ao Firefox" depois em "Adicionar" e aguarde a instalação</small>
+			</span>
+
+			<h2 class="mt-4">Passo 2</h2>
+			<div class="lead mb-2">Instalar a extensão</div>
+
+			<a href="js/extension.user.js" class="btn btn-sm btn-primary mb-2">
+				<i class="mdi mdi-puzzle me-2"></i> Clique aqui para instalar
+			</a>
+
+			<small class="d-block mb-2">Ao aparecer a tela abaixo, clique em "Instalar"</small>
+			<small class="d-block mb-2">Caso esta tela não apareça, significa que o Tampermonkey não está instalado, volte ao
+				Passo 1.</small>
+
+			<img src="img/screenshot01.png" alt="Captura de tela mostrando o botão de instalar"
+				class="w-100 rounded border border-white border-5 shadow">
+
+			<small class="d-block mt-2">Caso esteja com o Google Meet aberto, saia e entre novamente</small>
+
+
+			<!-- <div class="display-6 mt-5">Como usar?</div>
+				<small class="d-block mt-2">Ao abrir o Google Meet verá um novo botão na barra inferior</small>
+				<img src="img/screenshot02.png" alt="Captura de tela mostrando a barra inferior do Google Meet e o novo botão"
+					class="w-100 rounded border border-white border-5 shadow"> -->
+
+
+		</section>
+	</main>
+
+	<script src="js/index.js"></script>
+</body>
+
+</html>
