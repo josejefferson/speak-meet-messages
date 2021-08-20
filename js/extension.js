@@ -138,10 +138,10 @@ function watchMessages(voice) {
 
 			if (options.nameAfter) {
 				phrase += message
-				if (speakName) phrase += ', disse ' + sender
+				if (options.speakName) phrase += ', disse ' + sender
 			}
 			else {
-				if (speakName) phrase += sender + 'disse, '
+				if (options.speakName) phrase += sender + 'disse, '
 				phrase += message
 			}
 
