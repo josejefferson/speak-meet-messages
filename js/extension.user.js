@@ -5,6 +5,8 @@
 // @author       Jefferson Dantas
 // @homepage     https://josejefferson.github.io/speak-meet-messages/
 // @supportURL   https://github.com/josejefferson/speak-meet-messages/issues
+// @updateURL    https://josejefferson.github.io/speak-meet-messages/js/extension.user.js
+// @downloadURL  https://josejefferson.github.io/speak-meet-messages/js/extension.user.js
 // @match        https://meet.google.com/*
 // @icon         https://www.google.com/s2/favicons?domain=meet.google.com
 // @grant        none
