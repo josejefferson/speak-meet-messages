@@ -40,7 +40,7 @@ window.addEventListener('load', () => {
 		if (installed) {
 			// Extensão instalada
 			$version.forEach(e => e.innerText = version)
-			$install[0].classList.add('btn-warning')
+			$install[0].classList.add('btn-success')
 			$install[0].querySelector('span').innerText = 'Reinstalar extensão'
 			$installed.classList.remove('hidden')
 			
