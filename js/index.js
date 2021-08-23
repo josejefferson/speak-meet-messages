@@ -1,4 +1,4 @@
-const CURRENT_VERSION = '0.3'
+const CURRENT_VERSION = '0.4'
 
 const LS_WAIT_INSTALL = 'speakMeetMessages.waitInstall'
 const LS_LAST_VERSION = 'speakMeetMessages.lastVersion'
