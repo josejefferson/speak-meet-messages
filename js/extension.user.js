@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Escutar mensagens do Google Meet
-// @version      0.2
+// @version      0.3
 // @description  Extensão que adiciona um recurso de falar em voz alta as novas mensagens no Google Meet
 // @author       Jefferson Dantas
 // @homepage     https://josejefferson.github.io/speak-meet-messages/
@@ -28,7 +28,7 @@ const Texto_para_falar_antes_da_mensagem = ''
 const Falar_nome = true
 
 // Se false, fala apenas 2 palavras do nome da pessoa
-const Falar_nome_completo = false
+const Falar_nome_completo = true
 
 // Se true, fala o nome da pessoa depois da mensagem, se false fala antes da mensagem
 const Falar_nome_depois_da_mensagem = true
