@@ -7,6 +7,7 @@
 	<title>Escutar mensagens do Meet</title>
 	<link rel="stylesheet" href="lib/css/materialdesignicons.min.css">
 	<link rel="stylesheet" href="lib/css/bootstrap.min.css">
+	<link rel="stylesheet" href="lib/css/sweetalert2.min.css">
 	<link rel="stylesheet" href="css/index.css">
 </head>
 
@@ -28,9 +29,18 @@
 				Instalando esta extensão, você escuta as novas mensagens sem precisar mudar para a tela do Meet
 			</p>
 
-			<a href="js/extension.user.js" class="btn btn-lg btn-primary d-block mx-auto fit-content">
-				<i class="mdi mdi-puzzle me-2"></i>Instalar extensão
+			<a href="js/extension.user.js" class="btn btn-lg btn-primary d-block mx-auto fit-content install">
+				<i class="mdi mdi-puzzle me-2"></i><span>Instalar extensão</span>
 			</a>
+
+			<p class="text-success installed hidden">
+				<i class="mdi mdi-check"></i> Instalada (v<span class="version"></span>)
+			</p>
+
+			<p class="text-orange update-available hidden">
+				<i class="mdi mdi-alert"></i> Atualização disponível (v<span class="version"></span> <i
+					class="mdi mdi-arrow-right"></i> v<span class="new-version"></span>)
+			</p>
 
 			<small class="d-block my-2">Importante: Para instalar esta extensão, você precisa antes instalar o
 				Tampermonkey</small>
@@ -82,7 +92,7 @@
 			<h2 class="mt-4">Passo 2</h2>
 			<div class="lead mb-2">Instalar a extensão</div>
 
-			<a href="js/extension.user.js" class="btn btn-sm btn-primary mb-2">
+			<a href="js/extension.user.js" class="btn btn-sm btn-primary mb-2 install">
 				<i class="mdi mdi-puzzle me-2"></i> Clique aqui para instalar
 			</a>
 
@@ -121,6 +131,7 @@
 		</section>
 	</main>
 
+	<script src="lib/js/sweetalert2.min.js"></script>
 	<script src="js/index.js"></script>
 </body>
 

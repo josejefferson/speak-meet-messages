@@ -11,6 +11,14 @@ img {
 	width: fit-content;
 }
 
+.text-orange {
+	color: var(--bs-orange);
+}
+
+.swal2-toast .swal2-content {
+	margin-left: 10px;
+}
+
 .hidden {
 	display: none !important;
 }
