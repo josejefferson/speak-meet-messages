@@ -26,7 +26,7 @@
 
 			<h1>Acompanhe o chat do Google Meet enquanto apresenta a tela</h1>
 			<p class="lead">
-				Instalando esta extensão, você escuta as novas mensagens sem precisar mudar para a tela do Meet
+				Instalando essa extensão, você escuta as novas mensagens sem precisar mudar para a tela do Meet
 			</p>
 
 			<a href="js/extension.user.js" class="btn btn-lg btn-primary d-block mx-auto fit-content install">
@@ -37,10 +37,11 @@
 				<i class="mdi mdi-check"></i> Instalada (v<span class="version"></span>)
 			</p>
 
-			<p class="text-orange update-available hidden">
+			<a href="#novidades" class="text-orange update-available hidden text-decoration-none"
+				title="Clique para ver as novidades">
 				<i class="mdi mdi-alert"></i> Atualização disponível (v<span class="version"></span> <i
 					class="mdi mdi-arrow-right"></i> v<span class="new-version"></span>)
-			</p>
+			</a>
 
 			<small class="d-block my-2">Importante: Para instalar esta extensão, você precisa antes instalar o
 				Tampermonkey</small>
@@ -64,7 +65,7 @@
 		<hr>
 
 		<section>
-			<div class="display-6">Como instalar?</div>
+			<div class="display-6" id="comoInstalar">Como instalar?</div>
 
 			<h2 class="mt-4">Passo 1</h2>
 			<div class="lead mb-2">Instalar o Tampermonkey</div>
@@ -102,13 +103,18 @@
 				instalado, então volte ao Passo 1.
 			</div>
 
-			<img src="img/screenshot01.png" alt="Captura de tela mostrando o botão de instalar"
-				class="rounded">
+			<img src="img/screenshot01.png" alt="Captura de tela mostrando o botão de instalar" class="rounded">
 
 			<small class="d-block mt-2">Caso esteja com o Google Meet aberto, saia e entre novamente</small>
+		</section>
 
+		<section>
+			<div class="display-6 mt-5 mb-4" id="comoUsar">Como usar?</div>
 
-			<div class="display-6 mt-5 mb-4">Como usar?</div>
+			<div class="alert alert-warning px-3 py-2 mt-3 d-block fit-content">
+				<i class="mdi mdi-alert"></i> Você só ouvirá as mensagens se o chat estiver <b>fechado</b>.
+			</div>
+
 			<small class="d-block mt-2">Ao abrir o Google Meet você verá um novo botão na barra inferior</small>
 			<img src="img/screenshot02.png" alt="Captura de tela mostrando a barra inferior do Google Meet e o novo botão"
 				class="rounded">
@@ -116,18 +122,26 @@
 			<small class="d-block mt-2">Caso ele esteja vermelho, significa que está desativado, clique para ativar e ele
 				ficará assim:</small>
 			<img src="img/screenshot03.png"
-				alt="Captura de tela mostrando a barra inferior do Google Meet e o novo botão ativado"
-				class="rounded">
+				alt="Captura de tela mostrando a barra inferior do Google Meet e o novo botão ativado" class="rounded">
 
 			<small class="d-block mt-2">Se o botão estiver escuro, tente atualizar a página. Se o problema persistir,
 				significa que o seu navegador não é compatível</small>
 			<img src="img/screenshot04.png"
-				alt="Captura de tela mostrando a barra inferior do Google Meet e o novo botão ativado"
-				class="rounded">
+				alt="Captura de tela mostrando a barra inferior do Google Meet e o novo botão ativado" class="rounded">
+		</section>
 
-			<div class="alert alert-warning px-3 py-2 mt-3 d-block fit-content">
-				<i class="mdi mdi-alert"></i> Você só ouvirá as mensagens se o chat estiver <b>fechado</b>.
-			</div>
+		<section>
+			<div class="display-6 mt-5 mb-4" id="novidades">O que há de novo?</div>
+			<h2 class="mt-4">Versão 0.5</h2>
+			<ul>
+				<li>Posição do botão de ativar/desativar fala movida para direita do botão da câmera</li>
+				<li>Novo menu de opções acessível clicando com o botão direito do mouse no botão de ativar/desativar fala</li>
+			</ul>
+
+			<h2 class="mt-4">Versão 0.4</h2>
+			<ul>
+				<li>Caso a 2ª parte do nome for muito pequena, lê 3 partes</li>
+			</ul>
 		</section>
 	</main>
 
