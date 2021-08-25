@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Escutar mensagens do Google Meet
-// @version      0.5
+// @version      0.6
 // @description  Extensão que adiciona um recurso de falar em voz alta as novas mensagens no Google Meet
 // @author       Jefferson Dantas
 // @homepage     https://josejefferson.github.io/speak-meet-messages/
@@ -153,7 +153,8 @@ $css.innerText = `
 	width: 48px;
 }
 
-.popup-background .popup header .close-settings:active {
+.popup-background .popup header .close-settings:active,
+.popup-background .popup header .close-settings:focus {
 	background-color: rgba(0, 0, 0, 0.12);
 }
 
@@ -196,7 +197,11 @@ $css.innerText = `
 }
 
 .popup-background .popup .content .option input[type="checkbox"] {
-	display: none;
+	opacity: 0;
+	z-index: -1;
+	pointer-events: none;
+	position: absolute;
+	outline: none;
 }
 
 .popup-background .popup .content .option .checkbox {
@@ -233,6 +238,7 @@ $css.innerText = `
 	font-weight: 400;
 	letter-spacing: .009375em;
 	line-height: 20px;
+	margin-left: 28px;
 	margin-right: 14px;
 	outline: none;
 	padding: 12px 16px 14px;
@@ -243,6 +249,84 @@ $css.innerText = `
 	border-color: #1a73e8;
 	border-width: 2px;
 	padding: 11px 15px 14px;
+}
+
+/* Switch */
+.switch {
+	display: inline-block;
+	position: relative;
+}
+
+.switch input {
+	opacity: 0;
+	outline: none;
+	pointer-events: none;
+	position: absolute;
+	z-index: -1;
+}
+
+.switch span {
+	cursor: pointer;
+	display: inline-block;
+	width: 100%;
+}
+
+.switch span::before {
+	background-color: black;
+	border-radius: 1000px;
+	content: '';
+	display: inline-block;
+	height: 14px;
+	margin: 17px 18px;
+	opacity: .38;
+	transition: background-color 0.2s, opacity 0.2s;
+	width: 32px;
+}
+
+.switch span::after {
+	--darkreader-bg--gm-switch-thumb-color--off: #fff;
+	background-color: var(--gm-switch-thumb-color--off, #fff);
+	border-radius: 50%;
+	box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%),
+		0px 2px 2px 0px rgb(0 0 0 / 14%),
+		0px 1px 5px 0px rgb(0 0 0 / 12%),
+		0 0 0 14px rgba(0, 0, 0, 0),
+		0 0 0 0 rgba(0, 0, 0, 0.24);
+	content: '';
+	height: 20px;
+	left: 14px;
+	position: absolute;
+	top: 14px;
+	transition: background-color 0.2s, left 0.2s, box-shadow .2s;
+	width: 20px;
+}
+
+.switch:hover span::after {
+	box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%),
+		0px 2px 2px 0px rgb(0 0 0 / 14%),
+		0px 1px 5px 0px rgb(0 0 0 / 12%),
+		0 0 0 14px rgba(158, 158, 158, 0.08);
+}
+
+.switch input:focus+span::after,
+.switch:active span::after {
+	box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%),
+		0px 2px 2px 0px rgb(0 0 0 / 14%),
+		0px 1px 5px 0px rgb(0 0 0 / 12%),
+		0 0 0 14px rgba(158, 158, 158, 0.24);
+}
+
+.switch input:checked+span::before {
+	background-color: var(--gm-switch-track-color--on, #4285f4);
+}
+
+.switch input:checked+span::after {
+	background-color: var(--gm-switch-thumb-color--on, #1a73e8);
+	left: 34px;
+}
+
+.switch:focus span::after {
+	box-shadow: rgba(0, 0, 0, 0.3) 0 0 0 5px;
 }`
 
 const popupOptionsHTML = `
@@ -269,8 +353,10 @@ const popupOptionsHTML = `
 				<h4>Dizer nome</h4>
 				<p>Diz o nome do usuário que enviou a mensagem</p>
 			</div>
-			<input type="checkbox" id="speakName">
-			<i class="checkbox google-material-icons"></i>
+			<div class="switch">
+				<input type="checkbox" id="speakName">
+				<span></span>
+			</div>
 		</label>
 
 		<label class="option">
@@ -278,8 +364,10 @@ const popupOptionsHTML = `
 				<h4>Dizer nome completo</h4>
 				<p>Se desmarcado, diz apenas 2 palavras do nome do usuário</p>
 			</div>
-			<input type="checkbox" id="fullName">
-			<i class="checkbox google-material-icons"></i>
+			<div class="switch">
+				<input type="checkbox" id="fullName">
+				<span></span>
+			</div>
 		</label>
 
 		<label class="option">
@@ -287,8 +375,10 @@ const popupOptionsHTML = `
 				<h4>Dizer nome depois da mensagem</h4>
 				<p>Diz o nome do usuário depois da mensagem, caso contrário, diz antes dela</p>
 			</div>
-			<input type="checkbox" id="nameAfter">
-			<i class="checkbox google-material-icons"></i>
+			<div class="switch">
+				<input type="checkbox" id="nameAfter">
+				<span></span>
+			</div>
 		</label>
 
 		<label class="option">
@@ -296,8 +386,10 @@ const popupOptionsHTML = `
 				<h4>Falar com a tela do Meet aberta</h4>
 				<p>Se desmarcada, diz a mensagem apenas quando a tela do Meet não está visível</p>
 			</div>
-			<input type="checkbox" id="meetOpen">
-			<i class="checkbox google-material-icons"></i>
+			<div class="switch">
+				<input type="checkbox" id="meetOpen">
+				<span></span>
+			</div>
 		</label>
 
 		<label class="option">
@@ -305,8 +397,10 @@ const popupOptionsHTML = `
 				<h4>Interromper mensagem anterior</h4>
 				<p>Quando uma nova mensagem chegar, a fala da anterior será interrompida</p>
 			</div>
-			<input type="checkbox" id="interruptPrev">
-			<i class="checkbox google-material-icons"></i>
+			<div class="switch">
+				<input type="checkbox" id="interruptPrev">
+				<span></span>
+			</div>
 		</label>
 
 		<label class="option">
@@ -469,7 +563,6 @@ function setupOptions($popup) {
 		if (!$option) continue
 		
 		const value = options[option]
-		console.log(options)
 		if (typeof value == 'boolean') {
 			$option.checked = value
 		} else {
@@ -485,7 +578,6 @@ function setupOptions($popup) {
 				lsset('option.' + option, e.target.value)
 				options[option] = e.target.value
 			}
-			console.log(options)
 		})
 	}
 
