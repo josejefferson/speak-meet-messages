@@ -362,7 +362,7 @@ const popupOptionsHTML = `
 		<label class="option">
 			<div class="details">
 				<h4>Dizer nome completo</h4>
-				<p>Se desmarcado, diz apenas 2 palavras do nome do usuário</p>
+				<p>Se desativado, diz apenas 2 palavras do nome do usuário</p>
 			</div>
 			<div class="switch">
 				<input type="checkbox" id="fullName">
@@ -384,7 +384,7 @@ const popupOptionsHTML = `
 		<label class="option">
 			<div class="details">
 				<h4>Falar com a tela do Meet aberta</h4>
-				<p>Se desmarcada, diz a mensagem apenas quando a tela do Meet não está visível</p>
+				<p>Se desativado, diz a mensagem apenas quando a tela do Meet não está visível</p>
 			</div>
 			<div class="switch">
 				<input type="checkbox" id="meetOpen">
