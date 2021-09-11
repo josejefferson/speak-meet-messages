@@ -71,4 +71,11 @@ window.addEventListener('load', () => {
 			localStorage.removeItem(LS_WAIT_INSTALL)
 		}
 	}, 100)
+
+	VisitorCounter({
+		elements: {
+			urlAll: '.total-users',
+			urlOnline: '.online-users',
+		}
+	})
 })
