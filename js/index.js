@@ -1,4 +1,4 @@
-const CURRENT_VERSION = '0.6'
+const CURRENT_VERSION = '0.7'
 
 const LS_WAIT_INSTALL = 'speakMeetMessages.waitInstall'
 const LS_LAST_VERSION = 'speakMeetMessages.lastVersion'
@@ -36,14 +36,14 @@ window.addEventListener('load', () => {
 	setTimeout(() => {
 		const installed = window.speakMeetMessagesInstalled
 		const version = window.speakMeetMessagesVersion
-	
+
 		if (installed) {
 			// Extensão instalada
 			$version.forEach(e => e.innerText = version)
 			$install[0].classList.add('btn-success')
 			$install[0].querySelector('span').innerText = 'Reinstalar extensão'
 			$installed.classList.remove('hidden')
-			
+
 			if (version !== CURRENT_VERSION) {
 				// Nova atualização disponível
 				$installed.classList.add('hidden')
@@ -52,9 +52,9 @@ window.addEventListener('load', () => {
 				$newVersion.forEach(e => e.innerText = CURRENT_VERSION)
 				$updateAvailable.classList.remove('hidden')
 			}
-	
+
 		}
-	
+
 		if (localStorage.getItem(LS_WAIT_INSTALL)) {
 			if (installed) {
 				// Sucesso na instalação
@@ -72,10 +72,9 @@ window.addEventListener('load', () => {
 		}
 	}, 100)
 
-	VisitorCounter({
+	if ('VisitorCounter' in window) VisitorCounter({
 		elements: {
-			urlAll: '.total-users',
-			urlOnline: '.online-users',
+			urlAll: '.total-users'
 		}
 	})
 })

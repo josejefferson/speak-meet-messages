@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Escutar mensagens do Google Meet
-// @version      0.6
+// @version      0.7
 // @description  Extensão que adiciona um recurso de falar em voz alta as novas mensagens no Google Meet
 // @author       Jefferson Dantas
 // @homepage     https://josejefferson.github.io/speak-meet-messages/
@@ -329,6 +329,7 @@ $css.innerText = `
 	box-shadow: rgba(0, 0, 0, 0.3) 0 0 0 5px;
 }`
 
+/*
 const popupOptionsHTML = `
 <div class="popup">
 	<header>
@@ -413,6 +414,173 @@ const popupOptionsHTML = `
 
 	</div><!-- .content -->
 </div><!-- .popup -->`
+*/
+
+// Código HTML acima convertido pelo site: https://html2js.esstudio.site/
+function createPopupOptions() {
+	const e_0 = document.createElement('div')
+	e_0.setAttribute('class', 'popup')
+	const e_1 = document.createElement('header')
+	const e_2 = document.createElement('h1')
+	e_2.appendChild(document.createTextNode('Opções'))
+	e_1.appendChild(e_2)
+	const e_3 = document.createElement('button')
+	e_3.setAttribute('class', 'close-settings')
+	const e_4 = document.createElement('i')
+	e_4.setAttribute('class', 'google-material-icons')
+	e_4.appendChild(document.createTextNode('close'))
+	e_3.appendChild(e_4)
+	e_1.appendChild(e_3)
+	e_0.appendChild(e_1)
+	const e_5 = document.createElement('div')
+	e_5.setAttribute('class', 'content')
+	const e_6 = document.createElement('label')
+	e_6.setAttribute('class', 'option')
+	const e_7 = document.createElement('div')
+	e_7.setAttribute('class', 'details')
+	const e_8 = document.createElement('h4')
+	e_8.appendChild(document.createTextNode('Texto antes da mensagem'))
+	e_7.appendChild(e_8)
+	const e_9 = document.createElement('p')
+	e_9.appendChild(document.createTextNode('Diz alguma expressão antes de cada mensagem, por exemplo: "Nova mensagem!"'))
+	e_7.appendChild(e_9)
+	e_6.appendChild(e_7)
+	const e_10 = document.createElement('input')
+	e_10.setAttribute('type', 'text')
+	e_10.setAttribute('style', 'width:230px')
+	e_10.setAttribute('id', 'beforeText')
+	e_6.appendChild(e_10)
+	e_5.appendChild(e_6)
+	const e_11 = document.createElement('label')
+	e_11.setAttribute('class', 'option')
+	const e_12 = document.createElement('div')
+	e_12.setAttribute('class', 'details')
+	const e_13 = document.createElement('h4')
+	e_13.appendChild(document.createTextNode('Dizer nome'))
+	e_12.appendChild(e_13)
+	const e_14 = document.createElement('p')
+	e_14.appendChild(document.createTextNode('Diz o nome do usuário que enviou a mensagem'))
+	e_12.appendChild(e_14)
+	e_11.appendChild(e_12)
+	const e_15 = document.createElement('div')
+	e_15.setAttribute('class', 'switch')
+	const e_16 = document.createElement('input')
+	e_16.setAttribute('type', 'checkbox')
+	e_16.setAttribute('id', 'speakName')
+	e_15.appendChild(e_16)
+	const e_17 = document.createElement('span')
+	e_15.appendChild(e_17)
+	e_11.appendChild(e_15)
+	e_5.appendChild(e_11)
+	const e_18 = document.createElement('label')
+	e_18.setAttribute('class', 'option')
+	const e_19 = document.createElement('div')
+	e_19.setAttribute('class', 'details')
+	const e_20 = document.createElement('h4')
+	e_20.appendChild(document.createTextNode('Dizer nome completo'))
+	e_19.appendChild(e_20)
+	const e_21 = document.createElement('p')
+	e_21.appendChild(document.createTextNode('Se desativado, diz apenas 2 palavras do nome do usuário'))
+	e_19.appendChild(e_21)
+	e_18.appendChild(e_19)
+	const e_22 = document.createElement('div')
+	e_22.setAttribute('class', 'switch')
+	const e_23 = document.createElement('input')
+	e_23.setAttribute('type', 'checkbox')
+	e_23.setAttribute('id', 'fullName')
+	e_22.appendChild(e_23)
+	const e_24 = document.createElement('span')
+	e_22.appendChild(e_24)
+	e_18.appendChild(e_22)
+	e_5.appendChild(e_18)
+	const e_25 = document.createElement('label')
+	e_25.setAttribute('class', 'option')
+	const e_26 = document.createElement('div')
+	e_26.setAttribute('class', 'details')
+	const e_27 = document.createElement('h4')
+	e_27.appendChild(document.createTextNode('Dizer nome depois da mensagem'))
+	e_26.appendChild(e_27)
+	const e_28 = document.createElement('p')
+	e_28.appendChild(document.createTextNode('Diz o nome do usuário depois da mensagem, caso contrário, diz antes dela'))
+	e_26.appendChild(e_28)
+	e_25.appendChild(e_26)
+	const e_29 = document.createElement('div')
+	e_29.setAttribute('class', 'switch')
+	const e_30 = document.createElement('input')
+	e_30.setAttribute('type', 'checkbox')
+	e_30.setAttribute('id', 'nameAfter')
+	e_29.appendChild(e_30)
+	const e_31 = document.createElement('span')
+	e_29.appendChild(e_31)
+	e_25.appendChild(e_29)
+	e_5.appendChild(e_25)
+	const e_32 = document.createElement('label')
+	e_32.setAttribute('class', 'option')
+	const e_33 = document.createElement('div')
+	e_33.setAttribute('class', 'details')
+	const e_34 = document.createElement('h4')
+	e_34.appendChild(document.createTextNode('Falar com a tela do Meet aberta'))
+	e_33.appendChild(e_34)
+	const e_35 = document.createElement('p')
+	e_35.appendChild(document.createTextNode('Se desativado, diz a mensagem apenas quando a tela do Meet não está visível'))
+	e_33.appendChild(e_35)
+	e_32.appendChild(e_33)
+	const e_36 = document.createElement('div')
+	e_36.setAttribute('class', 'switch')
+	const e_37 = document.createElement('input')
+	e_37.setAttribute('type', 'checkbox')
+	e_37.setAttribute('id', 'meetOpen')
+	e_36.appendChild(e_37)
+	const e_38 = document.createElement('span')
+	e_36.appendChild(e_38)
+	e_32.appendChild(e_36)
+	e_5.appendChild(e_32)
+	const e_39 = document.createElement('label')
+	e_39.setAttribute('class', 'option')
+	const e_40 = document.createElement('div')
+	e_40.setAttribute('class', 'details')
+	const e_41 = document.createElement('h4')
+	e_41.appendChild(document.createTextNode('Interromper mensagem anterior'))
+	e_40.appendChild(e_41)
+	const e_42 = document.createElement('p')
+	e_42.appendChild(document.createTextNode('Quando uma nova mensagem chegar, a fala da anterior será interrompida'))
+	e_40.appendChild(e_42)
+	e_39.appendChild(e_40)
+	const e_43 = document.createElement('div')
+	e_43.setAttribute('class', 'switch')
+	const e_44 = document.createElement('input')
+	e_44.setAttribute('type', 'checkbox')
+	e_44.setAttribute('id', 'interruptPrev')
+	e_43.appendChild(e_44)
+	const e_45 = document.createElement('span')
+	e_43.appendChild(e_45)
+	e_39.appendChild(e_43)
+	e_5.appendChild(e_39)
+	const e_46 = document.createElement('label')
+	e_46.setAttribute('class', 'option')
+	const e_47 = document.createElement('div')
+	e_47.setAttribute('class', 'details')
+	const e_48 = document.createElement('h4')
+	e_48.appendChild(document.createTextNode('Velocidade da voz'))
+	e_47.appendChild(e_48)
+	const e_49 = document.createElement('p')
+	e_49.appendChild(document.createTextNode('Ajusta a velocidade da voz, exemplo: 0,5 mais lento, 1,5 mais rápido'))
+	e_47.appendChild(e_49)
+	e_46.appendChild(e_47)
+	const e_50 = document.createElement('input')
+	e_50.setAttribute('type', 'number')
+	e_50.setAttribute('min', '0')
+	e_50.setAttribute('max', '2')
+	e_50.setAttribute('step', '0.1')
+	e_50.setAttribute('style', 'width:80px')
+	e_50.setAttribute('id', 'voiceSpeed')
+	e_46.appendChild(e_50)
+	e_5.appendChild(e_46)
+	e_0.appendChild(e_5)
+	return e_0
+}
+
+const $popupOptions = createPopupOptions()
 
 tryStart()
 function tryStart() {
@@ -427,9 +595,11 @@ function tryStart() {
 
 function start() {
 	// Configura o botão
-	$button.innerHTML += '<i class="google-material-icons"></i>'
 	$button.title = 'Ativar/desativar mensagens em voz alta\nClique com o botão direito para opções'
 	$button.classList.add('speak-messages')
+	const $buttonIcon = document.createElement('i')
+	$buttonIcon.classList.add('google-material-icons')
+	$button.appendChild($buttonIcon)
 
 	// Insere o botão de ativar/desativar
 	const $before = document.querySelector(selectors.beforeButton)
@@ -441,7 +611,7 @@ function start() {
 	// Insere o popup de opções
 	const $popup = document.createElement('div')
 	$popup.classList.add('popup-background')
-	$popup.innerHTML = popupOptionsHTML
+	$popup.appendChild($popupOptions)
 	document.body.appendChild($popup)
 	setupOptions($popup)
 
@@ -555,13 +725,13 @@ function setupOptions($popup) {
 	$popup.addEventListener('click', e => {
 		if (e.target == $popup) closePopup()
 	})
-	
+
 	$popup.querySelector('.close-settings').addEventListener('click', closePopup)
-	
+
 	for (let option in options) {
 		const $option = $popup.querySelector('#' + option)
 		if (!$option) continue
-		
+
 		const value = options[option]
 		if (typeof value == 'boolean') {
 			$option.checked = value
