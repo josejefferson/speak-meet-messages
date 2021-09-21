@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Escutar mensagens do Google Meet
-// @version      0.7
+// @version      0.8
 // @description  Extensão que adiciona um recurso de falar em voz alta as novas mensagens no Google Meet
 // @author       Jefferson Dantas
 // @homepage     https://josejefferson.github.io/speak-meet-messages/
@@ -10,12 +10,15 @@
 // @include      https://meet.google.com/*
 // @include      https://josejefferson.github.io/speak-meet-messages/
 // @include      http://localhost:8080/
+// @include      http://127.0.0.1:8080/
 // @icon         https://www.google.com/s2/favicons?domain=meet.google.com
 // @grant        none
 // ==/UserScript==
 
 const options = {
+	voice: lsget('option.voice') == null ? '' : lsget('option.voice'),
 	beforeText: lsget('option.beforeText') == null ? '' : lsget('option.beforeText'),
+	intermediateText: lsget('option.intermediateText') == null ? 'Disse' : lsget('option.intermediateText'),
 	speakName: lsget('option.speakName') == null ? true : lsget('option.speakName'),
 	fullName: lsget('option.fullName') == null ? false : lsget('option.fullName'),
 	nameAfter: lsget('option.nameAfter') == null ? true : lsget('option.nameAfter'),
@@ -33,6 +36,7 @@ const selectors = {
 }
 
 let active = lsget('active')
+let voices = []
 const $button = document.createElement('button')
 
 const $css = document.createElement('style')
@@ -73,8 +77,8 @@ $css.innerText = `
 
 .speak-messages:disabled {
 	color: rgba(232, 234, 237, 0.38);
+	cursor: default;
 	opacity: .25;
-	pointer-events: none;
 }
 
 
@@ -227,7 +231,8 @@ $css.innerText = `
 	color: #1a73e8;
 }
 
-.popup-background .popup .content .option input {
+.popup-background .popup .content .option input,
+.popup-background .popup .content .option select {
 	align-self: center;
 	border-radius: 4px;
 	border: rgba(0, 0, 0, .38) 1px solid;
@@ -245,7 +250,8 @@ $css.innerText = `
 	transition: .15s ease;
 }
 
-.popup-background .popup .content .option input:focus {
+.popup-background .popup .content .option input:focus,
+.popup-background .popup .content .option select:focus {
 	border-color: #1a73e8;
 	border-width: 2px;
 	padding: 11px 15px 14px;
@@ -284,18 +290,25 @@ $css.innerText = `
 }
 
 .switch span::after {
-	--darkreader-bg--gm-switch-thumb-color--off: #fff;
-	background-color: var(--gm-switch-thumb-color--off, #fff);
+	--darkreader-bg--gm-switch-thumb-color--off: #4b5154;
+	align-items: center;
+	background-color: var(--gm-switch-thumb-color--off, #5f6368);
 	border-radius: 50%;
 	box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%),
 		0px 2px 2px 0px rgb(0 0 0 / 14%),
 		0px 1px 5px 0px rgb(0 0 0 / 12%),
 		0 0 0 14px rgba(0, 0, 0, 0),
 		0 0 0 0 rgba(0, 0, 0, 0.24);
-	content: '';
+	color: white;
+	content: 'remove';
+	display: flex;
+	font-family: 'Google Material Icons';
+	font-size: 20px;
 	height: 20px;
+	justify-content: center;
 	left: 14px;
 	position: absolute;
+	text-align: center;
 	top: 14px;
 	transition: background-color 0.2s, left 0.2s, box-shadow .2s;
 	width: 20px;
@@ -322,6 +335,7 @@ $css.innerText = `
 
 .switch input:checked+span::after {
 	background-color: var(--gm-switch-thumb-color--on, #1a73e8);
+	content: 'done';
 	left: 34px;
 }
 
@@ -343,10 +357,28 @@ const popupOptionsHTML = `
 
 		<label class="option">
 			<div class="details">
+				<h4>Voz da fala</h4>
+				<p>Selecione a voz que será usada para ler as mensagens em voz alta</p>
+			</div>
+			<select style="width:230px" id="voice">
+				<option value>(Automático)</option>
+			</select>
+		</label>
+
+		<label class="option">
+			<div class="details">
 				<h4>Texto antes da mensagem</h4>
 				<p>Diz alguma expressão antes de cada mensagem, por exemplo: "Nova mensagem!"</p>
 			</div>
 			<input type="text" style="width:230px" id="beforeText">
+		</label>
+
+		<label class="option">
+			<div class="details">
+				<h4>Texto intermediário</h4>
+				<p>Texto que fica entre a mensagem e o nome do usuário</p>
+			</div>
+			<input type="text" style="width:230px" id="intermediateText">
 		</label>
 
 		<label class="option">
@@ -439,143 +471,180 @@ function createPopupOptions() {
 	const e_7 = document.createElement('div')
 	e_7.setAttribute('class', 'details')
 	const e_8 = document.createElement('h4')
-	e_8.appendChild(document.createTextNode('Texto antes da mensagem'))
+	e_8.appendChild(document.createTextNode('Voz da fala'))
 	e_7.appendChild(e_8)
 	const e_9 = document.createElement('p')
-	e_9.appendChild(document.createTextNode('Diz alguma expressão antes de cada mensagem, por exemplo: "Nova mensagem!"'))
+	e_9.appendChild(document.createTextNode('Selecione a voz que será usada para ler as mensagens em voz alta'))
 	e_7.appendChild(e_9)
 	e_6.appendChild(e_7)
-	const e_10 = document.createElement('input')
-	e_10.setAttribute('type', 'text')
+	const e_10 = document.createElement('select')
 	e_10.setAttribute('style', 'width:230px')
-	e_10.setAttribute('id', 'beforeText')
+	e_10.setAttribute('id', 'voice')
+	const e_11 = document.createElement('option')
+	e_11.setAttribute('value', '')
+	e_11.appendChild(document.createTextNode('(Automático)'))
+	e_10.appendChild(e_11)
 	e_6.appendChild(e_10)
 	e_5.appendChild(e_6)
-	const e_11 = document.createElement('label')
-	e_11.setAttribute('class', 'option')
-	const e_12 = document.createElement('div')
-	e_12.setAttribute('class', 'details')
-	const e_13 = document.createElement('h4')
-	e_13.appendChild(document.createTextNode('Dizer nome'))
+	const e_12 = document.createElement('label')
+	e_12.setAttribute('class', 'option')
+	const e_13 = document.createElement('div')
+	e_13.setAttribute('class', 'details')
+	const e_14 = document.createElement('h4')
+	e_14.appendChild(document.createTextNode('Texto antes da mensagem'))
+	e_13.appendChild(e_14)
+	const e_15 = document.createElement('p')
+	e_15.appendChild(document.createTextNode('Diz alguma expressão antes de cada mensagem, por exemplo: "Nova mensagem!"'))
+	e_13.appendChild(e_15)
 	e_12.appendChild(e_13)
-	const e_14 = document.createElement('p')
-	e_14.appendChild(document.createTextNode('Diz o nome do usuário que enviou a mensagem'))
-	e_12.appendChild(e_14)
-	e_11.appendChild(e_12)
-	const e_15 = document.createElement('div')
-	e_15.setAttribute('class', 'switch')
 	const e_16 = document.createElement('input')
-	e_16.setAttribute('type', 'checkbox')
-	e_16.setAttribute('id', 'speakName')
-	e_15.appendChild(e_16)
-	const e_17 = document.createElement('span')
-	e_15.appendChild(e_17)
-	e_11.appendChild(e_15)
-	e_5.appendChild(e_11)
-	const e_18 = document.createElement('label')
-	e_18.setAttribute('class', 'option')
-	const e_19 = document.createElement('div')
-	e_19.setAttribute('class', 'details')
-	const e_20 = document.createElement('h4')
-	e_20.appendChild(document.createTextNode('Dizer nome completo'))
-	e_19.appendChild(e_20)
-	const e_21 = document.createElement('p')
-	e_21.appendChild(document.createTextNode('Se desativado, diz apenas 2 palavras do nome do usuário'))
-	e_19.appendChild(e_21)
+	e_16.setAttribute('type', 'text')
+	e_16.setAttribute('style', 'width:230px')
+	e_16.setAttribute('id', 'beforeText')
+	e_12.appendChild(e_16)
+	e_5.appendChild(e_12)
+	const e_17 = document.createElement('label')
+	e_17.setAttribute('class', 'option')
+	const e_18 = document.createElement('div')
+	e_18.setAttribute('class', 'details')
+	const e_19 = document.createElement('h4')
+	e_19.appendChild(document.createTextNode('Texto intermediário'))
 	e_18.appendChild(e_19)
-	const e_22 = document.createElement('div')
-	e_22.setAttribute('class', 'switch')
-	const e_23 = document.createElement('input')
-	e_23.setAttribute('type', 'checkbox')
-	e_23.setAttribute('id', 'fullName')
+	const e_20 = document.createElement('p')
+	e_20.appendChild(document.createTextNode('Texto que fica entre a mensagem e o nome do usuário'))
+	e_18.appendChild(e_20)
+	e_17.appendChild(e_18)
+	const e_21 = document.createElement('input')
+	e_21.setAttribute('type', 'text')
+	e_21.setAttribute('style', 'width:230px')
+	e_21.setAttribute('id', 'intermediateText')
+	e_17.appendChild(e_21)
+	e_5.appendChild(e_17)
+	const e_22 = document.createElement('label')
+	e_22.setAttribute('class', 'option')
+	const e_23 = document.createElement('div')
+	e_23.setAttribute('class', 'details')
+	const e_24 = document.createElement('h4')
+	e_24.appendChild(document.createTextNode('Dizer nome'))
+	e_23.appendChild(e_24)
+	const e_25 = document.createElement('p')
+	e_25.appendChild(document.createTextNode('Diz o nome do usuário que enviou a mensagem'))
+	e_23.appendChild(e_25)
 	e_22.appendChild(e_23)
-	const e_24 = document.createElement('span')
-	e_22.appendChild(e_24)
-	e_18.appendChild(e_22)
-	e_5.appendChild(e_18)
-	const e_25 = document.createElement('label')
-	e_25.setAttribute('class', 'option')
 	const e_26 = document.createElement('div')
-	e_26.setAttribute('class', 'details')
-	const e_27 = document.createElement('h4')
-	e_27.appendChild(document.createTextNode('Dizer nome depois da mensagem'))
+	e_26.setAttribute('class', 'switch')
+	const e_27 = document.createElement('input')
+	e_27.setAttribute('type', 'checkbox')
+	e_27.setAttribute('id', 'speakName')
 	e_26.appendChild(e_27)
-	const e_28 = document.createElement('p')
-	e_28.appendChild(document.createTextNode('Diz o nome do usuário depois da mensagem, caso contrário, diz antes dela'))
+	const e_28 = document.createElement('span')
 	e_26.appendChild(e_28)
-	e_25.appendChild(e_26)
-	const e_29 = document.createElement('div')
-	e_29.setAttribute('class', 'switch')
-	const e_30 = document.createElement('input')
-	e_30.setAttribute('type', 'checkbox')
-	e_30.setAttribute('id', 'nameAfter')
+	e_22.appendChild(e_26)
+	e_5.appendChild(e_22)
+	const e_29 = document.createElement('label')
+	e_29.setAttribute('class', 'option')
+	const e_30 = document.createElement('div')
+	e_30.setAttribute('class', 'details')
+	const e_31 = document.createElement('h4')
+	e_31.appendChild(document.createTextNode('Dizer nome completo'))
+	e_30.appendChild(e_31)
+	const e_32 = document.createElement('p')
+	e_32.appendChild(document.createTextNode('Se desativado, diz apenas 2 palavras do nome do usuário'))
+	e_30.appendChild(e_32)
 	e_29.appendChild(e_30)
-	const e_31 = document.createElement('span')
-	e_29.appendChild(e_31)
-	e_25.appendChild(e_29)
-	e_5.appendChild(e_25)
-	const e_32 = document.createElement('label')
-	e_32.setAttribute('class', 'option')
 	const e_33 = document.createElement('div')
-	e_33.setAttribute('class', 'details')
-	const e_34 = document.createElement('h4')
-	e_34.appendChild(document.createTextNode('Falar com a tela do Meet aberta'))
+	e_33.setAttribute('class', 'switch')
+	const e_34 = document.createElement('input')
+	e_34.setAttribute('type', 'checkbox')
+	e_34.setAttribute('id', 'fullName')
 	e_33.appendChild(e_34)
-	const e_35 = document.createElement('p')
-	e_35.appendChild(document.createTextNode('Se desativado, diz a mensagem apenas quando a tela do Meet não está visível'))
+	const e_35 = document.createElement('span')
 	e_33.appendChild(e_35)
-	e_32.appendChild(e_33)
-	const e_36 = document.createElement('div')
-	e_36.setAttribute('class', 'switch')
-	const e_37 = document.createElement('input')
-	e_37.setAttribute('type', 'checkbox')
-	e_37.setAttribute('id', 'meetOpen')
+	e_29.appendChild(e_33)
+	e_5.appendChild(e_29)
+	const e_36 = document.createElement('label')
+	e_36.setAttribute('class', 'option')
+	const e_37 = document.createElement('div')
+	e_37.setAttribute('class', 'details')
+	const e_38 = document.createElement('h4')
+	e_38.appendChild(document.createTextNode('Dizer nome depois da mensagem'))
+	e_37.appendChild(e_38)
+	const e_39 = document.createElement('p')
+	e_39.appendChild(document.createTextNode('Diz o nome do usuário depois da mensagem, caso contrário, diz antes dela'))
+	e_37.appendChild(e_39)
 	e_36.appendChild(e_37)
-	const e_38 = document.createElement('span')
-	e_36.appendChild(e_38)
-	e_32.appendChild(e_36)
-	e_5.appendChild(e_32)
-	const e_39 = document.createElement('label')
-	e_39.setAttribute('class', 'option')
 	const e_40 = document.createElement('div')
-	e_40.setAttribute('class', 'details')
-	const e_41 = document.createElement('h4')
-	e_41.appendChild(document.createTextNode('Interromper mensagem anterior'))
+	e_40.setAttribute('class', 'switch')
+	const e_41 = document.createElement('input')
+	e_41.setAttribute('type', 'checkbox')
+	e_41.setAttribute('id', 'nameAfter')
 	e_40.appendChild(e_41)
-	const e_42 = document.createElement('p')
-	e_42.appendChild(document.createTextNode('Quando uma nova mensagem chegar, a fala da anterior será interrompida'))
+	const e_42 = document.createElement('span')
 	e_40.appendChild(e_42)
-	e_39.appendChild(e_40)
-	const e_43 = document.createElement('div')
-	e_43.setAttribute('class', 'switch')
-	const e_44 = document.createElement('input')
-	e_44.setAttribute('type', 'checkbox')
-	e_44.setAttribute('id', 'interruptPrev')
+	e_36.appendChild(e_40)
+	e_5.appendChild(e_36)
+	const e_43 = document.createElement('label')
+	e_43.setAttribute('class', 'option')
+	const e_44 = document.createElement('div')
+	e_44.setAttribute('class', 'details')
+	const e_45 = document.createElement('h4')
+	e_45.appendChild(document.createTextNode('Falar com a tela do Meet aberta'))
+	e_44.appendChild(e_45)
+	const e_46 = document.createElement('p')
+	e_46.appendChild(document.createTextNode('Se desativado, diz a mensagem apenas quando a tela do Meet não está visível'))
+	e_44.appendChild(e_46)
 	e_43.appendChild(e_44)
-	const e_45 = document.createElement('span')
-	e_43.appendChild(e_45)
-	e_39.appendChild(e_43)
-	e_5.appendChild(e_39)
-	const e_46 = document.createElement('label')
-	e_46.setAttribute('class', 'option')
 	const e_47 = document.createElement('div')
-	e_47.setAttribute('class', 'details')
-	const e_48 = document.createElement('h4')
-	e_48.appendChild(document.createTextNode('Velocidade da voz'))
+	e_47.setAttribute('class', 'switch')
+	const e_48 = document.createElement('input')
+	e_48.setAttribute('type', 'checkbox')
+	e_48.setAttribute('id', 'meetOpen')
 	e_47.appendChild(e_48)
-	const e_49 = document.createElement('p')
-	e_49.appendChild(document.createTextNode('Ajusta a velocidade da voz, exemplo: 0,5 mais lento, 1,5 mais rápido'))
+	const e_49 = document.createElement('span')
 	e_47.appendChild(e_49)
-	e_46.appendChild(e_47)
-	const e_50 = document.createElement('input')
-	e_50.setAttribute('type', 'number')
-	e_50.setAttribute('min', '0')
-	e_50.setAttribute('max', '2')
-	e_50.setAttribute('step', '0.1')
-	e_50.setAttribute('style', 'width:80px')
-	e_50.setAttribute('id', 'voiceSpeed')
-	e_46.appendChild(e_50)
-	e_5.appendChild(e_46)
+	e_43.appendChild(e_47)
+	e_5.appendChild(e_43)
+	const e_50 = document.createElement('label')
+	e_50.setAttribute('class', 'option')
+	const e_51 = document.createElement('div')
+	e_51.setAttribute('class', 'details')
+	const e_52 = document.createElement('h4')
+	e_52.appendChild(document.createTextNode('Interromper mensagem anterior'))
+	e_51.appendChild(e_52)
+	const e_53 = document.createElement('p')
+	e_53.appendChild(document.createTextNode('Quando uma nova mensagem chegar, a fala da anterior será interrompida'))
+	e_51.appendChild(e_53)
+	e_50.appendChild(e_51)
+	const e_54 = document.createElement('div')
+	e_54.setAttribute('class', 'switch')
+	const e_55 = document.createElement('input')
+	e_55.setAttribute('type', 'checkbox')
+	e_55.setAttribute('id', 'interruptPrev')
+	e_54.appendChild(e_55)
+	const e_56 = document.createElement('span')
+	e_54.appendChild(e_56)
+	e_50.appendChild(e_54)
+	e_5.appendChild(e_50)
+	const e_57 = document.createElement('label')
+	e_57.setAttribute('class', 'option')
+	const e_58 = document.createElement('div')
+	e_58.setAttribute('class', 'details')
+	const e_59 = document.createElement('h4')
+	e_59.appendChild(document.createTextNode('Velocidade da voz'))
+	e_58.appendChild(e_59)
+	const e_60 = document.createElement('p')
+	e_60.appendChild(document.createTextNode('Ajusta a velocidade da voz, exemplo: 0,5 mais lento, 1,5 mais rápido'))
+	e_58.appendChild(e_60)
+	e_57.appendChild(e_58)
+	const e_61 = document.createElement('input')
+	e_61.setAttribute('type', 'number')
+	e_61.setAttribute('min', '0')
+	e_61.setAttribute('max', '2')
+	e_61.setAttribute('step', '0.1')
+	e_61.setAttribute('style', 'width:80px')
+	e_61.setAttribute('id', 'voiceSpeed')
+	e_57.appendChild(e_61)
+	e_5.appendChild(e_57)
 	e_0.appendChild(e_5)
 	return e_0
 }
@@ -628,37 +697,66 @@ function start() {
 		return
 	}
 
-	getVoice(voice => {
-		// Não há voz disponível
-		if (!voice) {
-			$button.disabled = true
-			$button.title = 'Seu dispositivo não suporta mensagens em voz alta'
-			return
-		}
+	// Configura o botão
+	if (active) $button.classList.add('active')
+	$button.addEventListener('click', toggle)
+	$button.addEventListener('contextmenu', openOptions)
 
-		// Configura o botão
-		if (active) $button.classList.add('active')
-		$button.addEventListener('click', toggle)
-		$button.addEventListener('contextmenu', openOptions)
+	// Configura as vozes
+	const $voice = document.querySelector('#voice')
+	speechSynthesis.addEventListener('voiceschanged', () => listVoices(speechSynthesis.getVoices(), $voice))
+	listVoices(speechSynthesis.getVoices(), $voice)
 
-		watchMessages(voice)
-	})
+	// Observa as novas mensagens
+	watchMessages()
 }
+
+
+// Lista as vozes
+function listVoices(_voices, $voice) {
+	voices = []
+	while ($voice.children.length > 1) {
+		$voice.removeChild($voice.lastChild)
+	}
+
+	if (!_voices.length) {
+		$button.disabled = true
+		$button.title = 'Seu dispositivo não suporta mensagens em voz alta'
+	}
+	else {
+		$button.disabled = false
+		$button.title = 'Ativar/desativar mensagens em voz alta\nClique com o botão direito para opções'
+	}
+
+	for (const voice of _voices) {
+		const $option = document.createElement('option')
+		$option.value = voice.voiceURI
+		$option.innerText = voice.name
+		$voice.appendChild($option)
+		voices.push(voice)
+	}
+
+	$voice.value = options.voice
+}
+
 
 // Retorna voz disponível
-function getVoice(callback) {
-	speechSynthesis.getVoices()
-	setTimeout(() => {
-		const voices = speechSynthesis.getVoices()
-		let voice = voices.find(voice => {
-			return voice.name === 'Google português do Brasil'
-		}) || voices.find(voice => {
-			return voice.lang.toLowerCase().includes('pt-br')
-		})
+function getVoice() {
+	let voice
+	if (options.voice) {
+		voice = voices.find((voice) => voice.voiceURI == options.voice)
+	}
+	voice = voice || voices.find((voice) => {
+		return voice.name == 'Google português do Brasil'
+	}) || voices.find((voice) => {
+		return voice.lang.toLowerCase().includes('pt-br')
+	}) || voices.find((voice) => {
+		return voice.lang.toLowerCase().includes('en-us')
+	}) || voices[0]
 
-		callback(voice)
-	}, 2000)
+	return voice
 }
+
 
 // Ativa/desativa a voz
 function toggle() {
@@ -668,8 +766,9 @@ function toggle() {
 	stopSpeak()
 }
 
+
 // Aguarda por mensagens
-function watchMessages(voice) {
+function watchMessages() {
 	const observer = new MutationObserver((mutationRecord) => {
 		const messageElement = mutationRecord[mutationRecord.length - 1].addedNodes[0]
 
@@ -687,14 +786,14 @@ function watchMessages(voice) {
 
 			if (options.nameAfter) {
 				phrase += message
-				if (options.speakName) phrase += ', disse ' + sender
+				if (options.speakName) phrase += ` ${options.intermediateText} ${sender}`
 			}
 			else {
-				if (options.speakName) phrase += sender + 'disse, '
+				if (options.speakName) phrase += `${sender} ${options.intermediateText} `
 				phrase += message
 			}
 
-			speak(phrase, options.voiceSpeed || 1.2, voice)
+			speak(phrase, options.voiceSpeed || 1.2)
 		}
 	})
 
@@ -702,9 +801,12 @@ function watchMessages(voice) {
 	observer.observe($msgBubble, { childList: true, subtree: true })
 }
 
+
 // Fala a mensagem
-function speak(message, speed, voice) {
+function speak(message, speed) {
 	if (options.interruptPrev) stopSpeak()
+	const voice = getVoice()
+	if (!voice) return
 
 	const utterance = new SpeechSynthesisUtterance()
 	utterance.text = message
@@ -715,10 +817,12 @@ function speak(message, speed, voice) {
 	speechSynthesis.speak(utterance)
 }
 
+
 // Para de falar
 function stopSpeak() {
 	speechSynthesis.cancel()
 }
+
 
 // Configurar o popup de opções
 function setupOptions($popup) {
@@ -739,16 +843,17 @@ function setupOptions($popup) {
 			$option.value = value
 		}
 
-		$option.addEventListener('change', (e) => {
-			const checkbox = e.target.type == 'checkbox'
-			if (checkbox) {
+		$option.addEventListener('change', update)
+		$option.addEventListener('keyup', update)
+		function update(e) {
+			if (e.target.type == 'checkbox') {
 				lsset('option.' + option, e.target.checked)
 				options[option] = e.target.checked
 			} else {
 				lsset('option.' + option, e.target.value)
 				options[option] = e.target.value
 			}
-		})
+		}
 	}
 
 	function closePopup() {
@@ -756,10 +861,12 @@ function setupOptions($popup) {
 	}
 }
 
+
 // Definir um valor no armazenamento
 function lsset(name, value) {
 	return localStorage.setItem('speak-messages.' + name, value)
 }
+
 
 // Consultar um valor no armazenamento
 function lsget(name) {
@@ -771,6 +878,7 @@ function lsget(name) {
 	if (!isNaN(value)) return Number(value)
 	return value
 }
+
 
 console.log(
 	'%c🎤 Escutar mensagens do Meet%cv' + GM_info.script.version,
