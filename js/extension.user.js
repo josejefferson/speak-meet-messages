@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Escutar mensagens do Google Meet
-// @version      0.8
+// @version      0.9
 // @description  Extensão que adiciona um recurso de falar em voz alta as novas mensagens no Google Meet
 // @author       Jefferson Dantas
 // @homepage     https://josejefferson.github.io/speak-meet-messages/
@@ -31,7 +31,7 @@ const selectors = {
 	participantId: '[data-initial-participant-id]',
 	beforeButton: '.SfBQ6c',
 	msgBubble: '.NSvDmb',
-	sender: '.UgDTGe',
+	sender: ['.UgDTGe', '.pQ7Zbd'],
 	message: '.xtO4Tc'
 }
 
