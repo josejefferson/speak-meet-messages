@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Escutar mensagens do Google Meet
-// @version      0.9
+// @version      0.10
 // @description  Extensão que adiciona um recurso de falar em voz alta as novas mensagens no Google Meet
 // @author       Jefferson Dantas
 // @homepage     https://josejefferson.github.io/speak-meet-messages/
@@ -29,7 +29,7 @@ const options = {
 
 const selectors = {
 	participantId: '[data-initial-participant-id]',
-	beforeButton: '.SfBQ6c',
+	beforeButton: ['.SfBQ6c', '.CrGlle'],
 	msgBubble: '.NSvDmb',
 	sender: ['.UgDTGe', '.pQ7Zbd'],
 	message: '.xtO4Tc'
@@ -53,6 +53,7 @@ $css.innerText = `
 	height: 40px;
 	justify-content: center;
 	margin: 0 6px;
+	outline: none !important;
 	transition: .2s ease;
 	user-select: none;
 	vertical-align: middle;
@@ -153,6 +154,7 @@ $css.innerText = `
 	height: 48px;
 	justify-content: center;
 	margin: -12px -16px;
+	outline: none;
 	transition: .15s ease;
 	width: 48px;
 }
@@ -664,7 +666,7 @@ function tryStart() {
 
 function start() {
 	// Configura o botão
-	$button.title = 'Ativar/desativar mensagens em voz alta\nClique com o botão direito para opções'
+	$button.title = 'Ativar/desativar mensagens em voz alta (ctrl + b)\nClique com o botão direito para opções'
 	$button.classList.add('speak-messages')
 	const $buttonIcon = document.createElement('i')
 	$buttonIcon.classList.add('google-material-icons')
@@ -701,6 +703,9 @@ function start() {
 	if (active) $button.classList.add('active')
 	$button.addEventListener('click', toggle)
 	$button.addEventListener('contextmenu', openOptions)
+	document.addEventListener('keydown', (e) => {
+		if (e.ctrlKey && e.key === 'b') toggle()
+	})
 
 	// Configura as vozes
 	const $voice = document.querySelector('#voice')
