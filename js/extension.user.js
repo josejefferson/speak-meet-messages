@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Escutar mensagens do Google Meet
-// @version      0.10
+// @version      0.11
 // @description  Extensão que adiciona um recurso de falar em voz alta as novas mensagens no Google Meet
 // @author       Jefferson Dantas
 // @homepage     https://josejefferson.github.io/speak-meet-messages/
@@ -28,11 +28,12 @@ const options = {
 }
 
 const selectors = {
-	participantId: '[data-initial-participant-id]',
-	beforeButton: ['.SfBQ6c', '.CrGlle'],
-	msgBubble: '.NSvDmb',
-	sender: ['.UgDTGe', '.pQ7Zbd'],
-	message: '.xtO4Tc'
+	participantId: '[data-participant-id]',
+	beforeButton: '[jsname="j7LFlb"]',
+	msgContainer: '.mIw6Bf',
+	msgBubbleClass: 'cOEZgf',
+	sender: '.RgDGVe',
+	message: '.LpG93b'
 }
 
 let active = lsget('active')
@@ -52,7 +53,7 @@ $css.innerText = `
 	display: inline-flex;
 	height: 40px;
 	justify-content: center;
-	margin: 0 6px;
+	margin: 0;
 	outline: none !important;
 	transition: .2s ease;
 	user-select: none;
@@ -663,7 +664,6 @@ function tryStart() {
 	}
 }
 
-
 function start() {
 	// Configura o botão
 	$button.title = 'Ativar/desativar mensagens em voz alta (ctrl + b)\nClique com o botão direito para opções'
@@ -774,11 +774,16 @@ function toggle() {
 
 // Aguarda por mensagens
 function watchMessages() {
+	const $msgContainer = document.querySelector(selectors.msgContainer)
+
 	const observer = new MutationObserver((mutationRecord) => {
-		const messageElement = mutationRecord[mutationRecord.length - 1].addedNodes[0]
+		const messageElement = mutationRecord.find((e) => {
+		  return e.target?.classList.contains(selectors.msgBubbleClass)
+		})?.addedNodes?.[0]
 
 		if (messageElement && active && (options.meetOpen || document.hidden)) {
 			let sender = messageElement.querySelector(selectors.sender).innerText
+
 			if (!options.fullName) {
 				sender = sender.split(' ')
 				if (sender[1].length <= 2) sender = sender.slice(0, 3).join(' ')
@@ -802,8 +807,7 @@ function watchMessages() {
 		}
 	})
 
-	const $msgBubble = document.querySelector(selectors.msgBubble)
-	observer.observe($msgBubble, { childList: true, subtree: true })
+	observer.observe($msgContainer, { childList: true, subtree: true })
 }
 
 
