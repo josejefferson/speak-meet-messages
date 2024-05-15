@@ -1,4 +1,4 @@
-const CURRENT_VERSION = '0.10'
+const CURRENT_VERSION = '0.11'
 
 const LS_WAIT_INSTALL = 'speakMeetMessages.waitInstall'
 const LS_LAST_VERSION = 'speakMeetMessages.lastVersion'
@@ -71,10 +71,4 @@ window.addEventListener('load', () => {
 			localStorage.removeItem(LS_WAIT_INSTALL)
 		}
 	}, 100)
-
-	if ('VisitorCounter' in window) VisitorCounter({
-		elements: {
-			urlAll: '.total-users'
-		}
-	})
 })
